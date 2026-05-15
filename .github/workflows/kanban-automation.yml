@@ -1,0 +1,351 @@
+name: Kanban Automation
+
+on:
+  issues:
+    types: [labeled, closed, reopened]
+
+jobs:
+  move-card:
+    name: Move card on project board
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      repository-projects: write
+
+    env:
+      PROJECT_ID: "PVT_kwHOBSq_9c4BXwil"
+      STATUS_FIELD_ID: "PVTSSF_lAHOBSq_9c4BXwilzhS7PSo"
+      OPT_BACKLOG: "b6d20368"
+      OPT_EM_REFINAMENTO: "e543dcdf"
+      OPT_REFINADO: "316551d1"
+      OPT_COMPROMETIDO: "abfcc4bd"
+      OPT_EM_DESENVOLVIMENTO: "e2a08778"
+      OPT_DESENVOLVIMENTO_OK: "e809b16f"
+      OPT_CODE_REVIEW: "e7272f52"
+      OPT_TESTES: "316a5d37"
+      OPT_DONE: "5b905f13"
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      # ─── 1. Determinar qual coluna usar ───────────────────────────
+      - name: Determine target column
+        id: target
+        run: |
+          LABEL="${{ github.event.label.name }}"
+          EVENT="${{ github.event.action }}"
+
+          if [ "$EVENT" = "closed" ]; then
+            echo "option=$OPT_DONE"         >> $GITHUB_OUTPUT
+            echo "stage=DONE"               >> $GITHUB_OUTPUT
+
+          elif [ "$EVENT" = "reopened" ]; then
+            echo "option=$OPT_BACKLOG"      >> $GITHUB_OUTPUT
+            echo "stage=BACKLOG"            >> $GITHUB_OUTPUT
+
+          elif [ "$LABEL" = "status: em-refinamento" ]; then
+            echo "option=$OPT_EM_REFINAMENTO"   >> $GITHUB_OUTPUT
+            echo "stage=EM REFINAMENTO"          >> $GITHUB_OUTPUT
+
+          elif [ "$LABEL" = "status: refinado" ]; then
+            echo "option=$OPT_REFINADO"     >> $GITHUB_OUTPUT
+            echo "stage=REFINADO"           >> $GITHUB_OUTPUT
+
+          elif [ "$LABEL" = "status: comprometido" ]; then
+            echo "option=$OPT_COMPROMETIDO" >> $GITHUB_OUTPUT
+            echo "stage=COMPROMETIDO"       >> $GITHUB_OUTPUT
+
+          elif [ "$LABEL" = "status: em-desenvolvimento" ]; then
+            echo "option=$OPT_EM_DESENVOLVIMENTO" >> $GITHUB_OUTPUT
+            echo "stage=EM DESENVOLVIMENTO"        >> $GITHUB_OUTPUT
+
+          elif [ "$LABEL" = "status: desenvolvimento-ok" ]; then
+            echo "option=$OPT_DESENVOLVIMENTO_OK" >> $GITHUB_OUTPUT
+            echo "stage=DESENVOLVIMENTO OK"        >> $GITHUB_OUTPUT
+
+          elif [ "$LABEL" = "status: code-review" ]; then
+            echo "option=$OPT_CODE_REVIEW"  >> $GITHUB_OUTPUT
+            echo "stage=CODE REVIEW"        >> $GITHUB_OUTPUT
+
+          elif [ "$LABEL" = "status: testes" ]; then
+            echo "option=$OPT_TESTES"       >> $GITHUB_OUTPUT
+            echo "stage=TESTES"             >> $GITHUB_OUTPUT
+
+          else
+            echo "option="                  >> $GITHUB_OUTPUT
+            echo "stage="                   >> $GITHUB_OUTPUT
+          fi
+
+      # ─── 2. Buscar o item do projeto correspondente à issue ───────
+      - name: Get project item ID
+        id: item
+        if: steps.target.outputs.option != ''
+        run: |
+          ISSUE_ID="${{ github.event.issue.node_id }}"
+
+          ITEM_ID=$(gh api graphql -f query='
+            query($projectId: ID!, $issueId: ID!) {
+              node(id: $projectId) {
+                ... on ProjectV2 {
+                  items(first: 100) {
+                    nodes {
+                      id
+                      content {
+                        ... on Issue { id }
+                      }
+                    }
+                  }
+                }
+              }
+            }' \
+            -f projectId="$PROJECT_ID" \
+            -f issueId="$ISSUE_ID" \
+            --jq ".data.node.items.nodes[] | select(.content.id == \"$ISSUE_ID\") | .id")
+
+          echo "item_id=$ITEM_ID" >> $GITHUB_OUTPUT
+
+      # ─── 3. Mover o card para a coluna correta ────────────────────
+      - name: Move card to column
+        if: steps.target.outputs.option != '' && steps.item.outputs.item_id != ''
+        run: |
+          gh api graphql -f query='
+            mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+              updateProjectV2ItemFieldValue(input: {
+                projectId: $projectId
+                itemId: $itemId
+                fieldId: $fieldId
+                value: { singleSelectOptionId: $optionId }
+              }) {
+                projectV2Item { id }
+              }
+            }' \
+            -f projectId="$PROJECT_ID" \
+            -f itemId="${{ steps.item.outputs.item_id }}" \
+            -f fieldId="$STATUS_FIELD_ID" \
+            -f optionId="${{ steps.target.outputs.option }}"
+
+          echo "Card movido para: ${{ steps.target.outputs.stage }}"
+
+      # ─── 4. Postar guia da etapa como comentário na issue ─────────
+      - name: Post stage guide comment
+        if: steps.target.outputs.stage != ''
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const stage = "${{ steps.target.outputs.stage }}";
+            const issue = context.issue;
+
+            const guides = {
+              "EM REFINAMENTO": `## 🔍 Guia — EM REFINAMENTO
+
+            Esta issue entrou em refinamento. O objetivo desta etapa é garantir que todos os envolvidos entendam **exatamente o que precisa ser feito** antes de qualquer linha de código.
+
+            ### ✅ Checklist de Refinamento
+
+            - [ ] **Contexto claro**: O problema ou funcionalidade está descrito de forma que qualquer dev do time entenda sem precisar perguntar?
+            - [ ] **Critérios de aceite definidos**: Sabemos exatamente quando esta issue estará "pronta"? Os critérios estão listados no corpo da issue?
+            - [ ] **Dependências mapeadas**: Esta issue depende de outra? Está bloqueada por algo?
+            - [ ] **Escopo delimitado**: A issue está pequena o suficiente para ser concluída em 1–3 dias? Se não, deve ser quebrada.
+            - [ ] **Branch definida**: O nome da branch de desenvolvimento está definido no corpo da issue?
+            - [ ] **Referência ao spec**: O requisito correspondente em \`requirements.md\` está referenciado?
+
+            ### ❓ Perguntas para o desenvolvedor responder nesta issue
+
+            1. Qual é o comportamento esperado em caso de erro ou edge case?
+            2. Existe alguma restrição técnica que impacta a implementação?
+            3. Há alguma decisão de design que precisa ser tomada antes de começar?
+
+            ### ➡️ Próximo passo
+            Quando todas as dúvidas estiverem respondidas e o checklist completo, adicione a label \`status: refinado\` para mover para a próxima etapa.`,
+
+              "REFINADO": `## ✅ Guia — REFINADO
+
+            Esta issue foi refinada e está pronta para ser comprometida em uma sprint ou ciclo de trabalho.
+
+            ### ✅ Checklist de Validação
+
+            - [ ] Todos os critérios de aceite estão claros e documentados na issue
+            - [ ] O escopo está delimitado (estimativa: 1–3 dias de trabalho)
+            - [ ] Dependências identificadas e resolvidas ou documentadas
+            - [ ] Branch de desenvolvimento definida
+            - [ ] Requisito do spec referenciado (\`requirements.md\`)
+            - [ ] Dev responsável identificado (assignee)
+
+            ### 📋 O que foi definido nesta issue?
+            Antes de comprometer, confirme que o corpo da issue contém:
+            - Descrição clara do objetivo
+            - Lista de tarefas técnicas
+            - Critérios de aceite
+            - Nome da branch
+
+            ### ➡️ Próximo passo
+            Quando o dev estiver pronto para iniciar, adicione a label \`status: comprometido\`.`,
+
+              "COMPROMETIDO": `## 🤝 Guia — COMPROMETIDO
+
+            Esta issue foi comprometida para o ciclo atual. O desenvolvedor se comprometeu a entregá-la.
+
+            ### ✅ Checklist antes de começar
+
+            - [ ] Branch criada a partir de \`main\` com o nome correto (ex: \`feat/nome-da-feature\`)
+            - [ ] Issue atribuída ao desenvolvedor responsável (assignee)
+            - [ ] Ambiente de desenvolvimento configurado e funcionando
+            - [ ] Spec lido: \`.kiro/specs/mxpilot-pro/requirements.md\` e \`design.md\`
+
+            ### 🚀 Como iniciar
+            \`\`\`bash
+            git checkout main
+            git pull origin main
+            git checkout -b feat/nome-da-feature
+            \`\`\`
+
+            ### ⏱️ Expectativa
+            Esta issue deve ser concluída dentro do ciclo atual. Se surgir algum bloqueio, comente aqui imediatamente.
+
+            ### ➡️ Próximo passo
+            Quando o desenvolvimento começar de fato, adicione a label \`status: em-desenvolvimento\`.`,
+
+              "EM DESENVOLVIMENTO": `## 🛠️ Guia — EM DESENVOLVIMENTO
+
+            O desenvolvimento desta issue está em andamento. Mantenha o time informado sobre o progresso.
+
+            ### ✅ Boas práticas durante o desenvolvimento
+
+            - [ ] Commits atômicos e descritivos seguindo Conventional Commits
+            - [ ] Código sendo desenvolvido na branch correta (nunca em \`main\`)
+            - [ ] Testes sendo escritos junto com o código (não depois)
+            - [ ] Se travar em algo por mais de 2h, pedir ajuda — não ficar em silêncio
+
+            ### 📝 Conventional Commits
+            \`\`\`
+            feat(modulo): descrição curta em minúsculas
+            fix(modulo): descrição do bug corrigido
+            test(modulo): descrição do teste adicionado
+            \`\`\`
+
+            ### 🔄 Atualizações de progresso
+            Comente nesta issue com atualizações diárias se o desenvolvimento durar mais de 1 dia:
+            - O que foi feito
+            - O que falta
+            - Algum bloqueio?
+
+            ### ➡️ Próximo passo
+            Quando o código estiver pronto e os testes passando localmente, adicione a label \`status: desenvolvimento-ok\`.`,
+
+              "DESENVOLVIMENTO OK": `## ✔️ Guia — DESENVOLVIMENTO OK
+
+            O código está pronto. Antes de abrir o Pull Request, faça uma auto-revisão.
+
+            ### ✅ Checklist de auto-revisão (antes do PR)
+
+            - [ ] Todos os testes passam localmente (\`npm test\` ou \`vitest run\`)
+            - [ ] Nenhum \`console.log\` de debug esquecido no código
+            - [ ] Nenhum código comentado ou morto
+            - [ ] Variáveis e funções com nomes descritivos
+            - [ ] Casos de erro tratados (não apenas o caminho feliz)
+            - [ ] A branch está atualizada com \`main\` (sem conflitos)
+
+            ### 🔀 Abrindo o Pull Request
+            \`\`\`bash
+            git push -u origin feat/nome-da-feature
+            gh pr create --title "feat: descrição" --body "Closes #NUMERO_DA_ISSUE"
+            \`\`\`
+
+            O PR deve referenciar esta issue com \`Closes #${issue.number}\` para fechar automaticamente ao fazer merge.
+
+            ### ➡️ Próximo passo
+            Após abrir o PR, adicione a label \`status: code-review\` e solicite revisão.`,
+
+              "CODE REVIEW": `## 👀 Guia — CODE REVIEW
+
+            Esta issue está em revisão de código. O revisor deve seguir este guia.
+
+            ### ✅ Checklist para o REVISOR
+
+            **Funcionalidade**
+            - [ ] O código faz o que a issue descreve?
+            - [ ] Os critérios de aceite foram atendidos?
+            - [ ] Edge cases e erros estão tratados?
+
+            **Qualidade de código**
+            - [ ] O código é legível e autoexplicativo?
+            - [ ] Não há duplicação desnecessária?
+            - [ ] Segue os padrões do projeto (TypeScript estrito, ESLint)?
+
+            **Testes**
+            - [ ] Os testes cobrem os cenários principais?
+            - [ ] Os property tests (fast-check) foram escritos onde aplicável?
+            - [ ] Todos os testes passam?
+
+            **Segurança e performance**
+            - [ ] Nenhum dado sensível exposto (tokens, senhas)?
+            - [ ] Nenhuma query N+1 ou operação desnecessariamente custosa?
+
+            ### 💬 Como dar feedback
+            - Seja específico: aponte a linha e explique o problema
+            - Diferencie bloqueadores de sugestões (use prefixos: **[BLOQUEADOR]**, **[SUGESTÃO]**)
+            - Aprove quando estiver satisfeito com o código
+
+            ### ➡️ Próximo passo
+            Após aprovação no PR, adicione a label \`status: testes\`.`,
+
+              "TESTES": `## 🧪 Guia — TESTES
+
+            O código foi revisado e aprovado. Agora é hora de validar o comportamento em ambiente de testes.
+
+            ### ✅ Checklist de Testes
+
+            **Testes automatizados**
+            - [ ] Suite completa passa: \`vitest run\`
+            - [ ] Property tests passam com 100+ iterações
+            - [ ] Cobertura dos critérios de aceite da issue
+
+            **Testes manuais (quando aplicável)**
+            - [ ] Fluxo principal testado manualmente no app/API
+            - [ ] Testado em modo offline (se envolver sincronização)
+            - [ ] Interface Modo Luva validada (botões >= 56dp, contraste, max 3 ações)
+
+            **Regressão**
+            - [ ] Funcionalidades existentes não foram quebradas
+            - [ ] Sincronização offline→online ainda funciona
+
+            ### 🐛 Se encontrar um bug
+            1. Comente nesta issue descrevendo o bug encontrado
+            2. Remova a label \`status: testes\`
+            3. Adicione a label \`status: em-desenvolvimento\` para retornar ao dev
+            4. Descreva claramente os passos para reproduzir
+
+            ### ➡️ Próximo passo
+            Quando todos os testes passarem, faça o merge do PR. A issue será movida para **DONE** automaticamente ao ser fechada.`,
+
+              "DONE": `## 🏁 Concluído!
+
+            Esta issue foi finalizada e entregue. 
+
+            ### 📊 Resumo da entrega
+            - Issue: #${issue.number}
+            - Fechada em: ${new Date().toLocaleDateString('pt-BR')}
+
+            ### 🔄 Limpeza pós-entrega
+            - [ ] Branch deletada após o merge
+            - [ ] Backlog atualizado se necessário
+            - [ ] Documentação atualizada se a funcionalidade impactar o README ou CONTRIBUTING
+
+            **Bom trabalho! 🚀**`,
+
+              "BACKLOG": `## 📋 Issue retornada ao Backlog
+
+            Esta issue foi reaberta e retornou ao **BACKLOG**.
+
+            ### ➡️ Próximo passo
+            Revise o motivo da reabertura, atualize a descrição se necessário e inicie o refinamento adicionando a label \`status: em-refinamento\`.`
+            };
+
+            const body = guides[stage];
+            if (body) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: body
+              });
+            }

@@ -4,30 +4,50 @@
 
 ## Fluxo de trabalho
 
-Este projeto usa **GitHub Flow**. Toda funcionalidade, correção ou melhoria é desenvolvida em uma branch separada e integrada via Pull Request.
+Este projeto usa **GitHub Flow** com um **Kanban automatizado**. Toda funcionalidade, correção ou melhoria passa por 9 etapas rastreadas no [Project Board](https://github.com/users/prbretas/projects/3).
 
-### Passo a passo
+### As 9 etapas do Kanban
 
-1. **Escolha ou crie uma Issue** no GitHub descrevendo o que será feito
-2. **Crie uma branch** a partir de `main` seguindo a nomenclatura abaixo
-3. **Implemente** a alteração com commits atômicos e descritivos
-4. **Abra um Pull Request** para `main` referenciando a Issue (`Closes #123`)
-5. **Aguarde revisão** — nenhum merge sem aprovação
-6. **Apague a branch** após o merge
+| Etapa | Label para aplicar | O que acontece |
+|---|---|---|
+| **BACKLOG** | *(estado inicial)* | Issue identificada, aguardando refinamento |
+| **EM REFINAMENTO** | `status: em-refinamento` | Detalhamento da issue, perguntas ao dev |
+| **REFINADO** | `status: refinado` | Issue clara, pronta para comprometer |
+| **COMPROMETIDO** | `status: comprometido` | Dev comprometido, pronto para iniciar |
+| **EM DESENVOLVIMENTO** | `status: em-desenvolvimento` | Código sendo escrito |
+| **DESENVOLVIMENTO OK** | `status: desenvolvimento-ok` | Código pronto, auto-revisão feita |
+| **CODE REVIEW** | `status: code-review` | PR aberto, aguardando revisão |
+| **TESTES** | `status: testes` | Validação final antes do merge |
+| **DONE** | *(fechar a issue)* | Entregue ✅ |
+
+> **Como funciona a automação:** ao adicionar uma label `status: *` em uma issue, o GitHub Actions move o card automaticamente no board **e** posta um guia com checklist para aquela etapa.
+
+### Passo a passo completo
 
 ```bash
-# Criar branch a partir de main
-git checkout main
-git pull origin main
+# 1. Escolha uma issue no BACKLOG e adicione: status: em-refinamento
+#    → O bot posta o guia de refinamento com perguntas a responder
+
+# 2. Após refinar, adicione: status: refinado
+#    → O bot confirma que está pronta para comprometer
+
+# 3. Quando for iniciar, adicione: status: comprometido
+#    → Crie a branch:
+git checkout main && git pull origin main
 git checkout -b feat/nome-da-feature
 
-# Após implementar
-git add .
-git commit -m "feat: descrição da funcionalidade"
-git push -u origin feat/nome-da-feature
+# 4. Ao começar a codar, adicione: status: em-desenvolvimento
 
-# Abrir PR via GitHub CLI
-gh pr create --title "feat: descrição" --body "Closes #<numero-da-issue>"
+# 5. Quando o código estiver pronto, adicione: status: desenvolvimento-ok
+#    → Faça a auto-revisão com o checklist do bot
+
+# 6. Abra o PR e adicione: status: code-review
+gh pr create --title "feat: descrição" --body "Closes #<numero>"
+
+# 7. Após aprovação no PR, adicione: status: testes
+
+# 8. Após todos os testes passarem, faça o merge
+#    → Feche a issue → card vai para DONE automaticamente
 ```
 
 ---
