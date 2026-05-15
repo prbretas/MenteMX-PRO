@@ -1,0 +1,35 @@
+name: User Story
+description: Descreva uma funcionalidade do ponto de vista do usuário
+title: "[STORY] "
+labels: ["story"]
+body:
+  - type: textarea
+    id: story
+    attributes:
+      label: História
+      description: "Como [tipo de usuário], quero [ação], para que [benefício]."
+      placeholder: "Como usuário, quero..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Critérios de aceitação
+      description: Liste os critérios que definem quando esta story está concluída.
+      placeholder: |
+        - [ ] Critério 1
+        - [ ] Critério 2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Prioridade
+      options:
+        - high
+        - medium
+        - low
+    validations:
+      required: true
