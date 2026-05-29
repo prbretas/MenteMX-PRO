@@ -7,6 +7,7 @@ import bikesRoutes from './bikes/bikes.routes.js';
 import sessionsRoutes from './sessions/sessions.routes.js';
 import syncRoutes from './sync/sync.routes.js';
 import eventsRoutes from './events/events.routes.js';
+import setupsRoutes from './setups/setups.routes.js';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use('/', bikesRoutes); // /pilots/:id/bikes routes
 app.use('/', sessionsRoutes); // /pilots/:id/sessions + /sessions/:id/laps routes
 app.use('/sync', syncRoutes); // /sync/batch + /sync/status
 app.use('/', eventsRoutes); // /pilots/:id/events
+app.use('/', setupsRoutes); // /pilots/:id/setups
 
 // Health check
 app.get('/api/health', (_req, res) => {
