@@ -39,7 +39,7 @@ jobs:
           cache-dependency-path: src/MenteMX-Pro-App/package-lock.json
 
       - name: Instalar dependências
-        run: npm ci --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Rodar testes do core
         run: npm run test:core
@@ -62,7 +62,7 @@ jobs:
           cache-dependency-path: src/MenteMX-Pro-App/package-lock.json
 
       - name: Instalar dependências
-        run: npm ci --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Rodar testes do backend
         run: npm run test --workspace=apps/backend --if-present
@@ -86,7 +86,7 @@ jobs:
           cache-dependency-path: src/MenteMX-Pro-App/package-lock.json
 
       - name: Instalar dependências
-        run: npm ci --legacy-peer-deps
+        run: npm install --legacy-peer-deps
 
       - name: Build core
         run: npm run build --workspace=packages/core
