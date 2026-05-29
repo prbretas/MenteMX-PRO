@@ -1,8 +1,8 @@
-# Design Document — MXPilot Pro
+# Design Document — MenteMX Pro
 
 ## Overview
 
-O MXPilot Pro é uma plataforma SaaS de inteligência esportiva para Motocross, construída sobre o paradigma **Local-First**: todos os dados são gravados primeiro no dispositivo do piloto e sincronizados com o servidor quando há conectividade. A interface segue o padrão **Modo Luva** — botões de toque mínimo de 56dp, alto contraste WCAG 2.1 AA e no máximo 3 ações primárias por tela.
+O MenteMX Pro é uma plataforma de inteligência esportiva e programa mental para pilotos e atletas do mundo offroad, construída sobre o paradigma **Local-First**: todos os dados são gravados primeiro no dispositivo do piloto e sincronizados com o servidor quando há conectividade. A interface segue o padrão **Modo Luva** — botões de toque mínimo de 56dp, alto contraste WCAG 2.1 AA e no máximo 3 ações primárias por tela.
 
 O MVP cobre três módulos funcionais:
 
@@ -81,7 +81,7 @@ sequenceDiagram
 
 ### Resolução de Conflitos
 
-A estratégia adotada é **Last-Write-Wins (LWW)** baseada em `updated_at` (timestamp ISO 8601 com milissegundos). Cada registro carrega um `device_id` para rastreabilidade. Quando o servidor detecta que o `updated_at` do cliente é mais antigo que o do servidor, preserva a versão do servidor e notifica o cliente. Dado que o MXPilot Pro é um app de uso individual (um piloto por conta), conflitos multi-dispositivo são raros e LWW é suficiente para o MVP.
+A estratégia adotada é **Last-Write-Wins (LWW)** baseada em `updated_at` (timestamp ISO 8601 com milissegundos). Cada registro carrega um `device_id` para rastreabilidade. Quando o servidor detecta que o `updated_at` do cliente é mais antigo que o do servidor, preserva a versão do servidor e notifica o cliente. Dado que o MenteMX Pro é um app de uso individual (um piloto por conta), conflitos multi-dispositivo são raros e LWW é suficiente para o MVP.
 
 ---
 
@@ -529,7 +529,7 @@ O registro do marco é atômico e independente do sucesso da notificação push.
 
 ### Property 21: Completude do relatório PDF
 
-*Para qualquer* período com pelo menos uma sessão registrada, o relatório PDF gerado deve conter: MX Score atual, dados do Gráfico de Radar, histórico de sessões do período, melhor tempo registrado, evolução do índice de Consistência, logotipo do MXPilot Pro e data de geração.
+*Para qualquer* período com pelo menos uma sessão registrada, o relatório PDF gerado deve conter: MX Score atual, dados do Gráfico de Radar, histórico de sessões do período, melhor tempo registrado, evolução do índice de Consistência, logotipo do MenteMX Pro e data de geração.
 
 **Validates: Requirements 11.2, 11.5**
 
@@ -585,7 +585,7 @@ A UI deve sempre refletir o estado atual da sincronização:
 
 ### Abordagem Dual
 
-O MXPilot Pro utiliza uma estratégia de testes em duas camadas complementares:
+O MenteMX Pro utiliza uma estratégia de testes em duas camadas complementares:
 
 1. **Testes de Propriedade (Property-Based)** — verificam invariantes universais sobre os algoritmos de cálculo (consistência, MX Score, streak, radar, formatação de tempo)
 2. **Testes de Exemplo (Unit/Integration)** — verificam comportamentos específicos de UI, fluxos de CRUD, casos de borda e integrações

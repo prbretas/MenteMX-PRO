@@ -1,0 +1,26 @@
+{
+  "name": "mentemx-pro",
+  "version": "0.1.0",
+  "private": true,
+  "description": "MenteMX Pro - Plataforma de inteligência esportiva para pilotos offroad",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:mobile": "npm run dev --workspace=apps/mobile",
+    "dev:backend": "npm run dev --workspace=apps/backend",
+    "dev:desktop": "npm run dev --workspace=apps/desktop",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces --if-present",
+    "test:core": "npm run test --workspace=packages/core",
+    "lint": "npm run lint --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "author": "MenteMX Team",
+  "license": "MIT"
+}

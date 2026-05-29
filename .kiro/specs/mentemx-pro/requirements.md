@@ -2,7 +2,7 @@
 
 ## Introduction
 
-O MXPilot Pro é uma plataforma SaaS de inteligência esportiva voltada exclusivamente para o ecossistema do Motocross. A plataforma transforma a percepção subjetiva do piloto em dados analíticos estruturados, permitindo evolução técnica baseada em métricas reais de performance, consistência e setup de moto.
+O MenteMX Pro é uma plataforma de inteligência esportiva e programa mental voltada para pilotos e atletas do mundo offroad. A plataforma transforma a percepção subjetiva do piloto em dados analíticos estruturados, permitindo evolução técnica e mental baseada em métricas reais de performance, consistência e setup de moto.
 
 O sistema opera em modelo **Local-First**: os dados são registrados offline e sincronizados com o servidor quando há conexão disponível. A interface segue o padrão **Modo Luva** — botões grandes, alto contraste e comandos simplificados para uso rápido entre baterias de treino ou corrida.
 
@@ -24,8 +24,8 @@ O MVP cobre três módulos principais: **Analytics**, **Setup Técnico** e **Eve
 - **MX_Score**: Pontuação proprietária de 0 a 1000 que representa a performance recente do Piloto.
 - **Consistência**: Métrica calculada a partir do desvio padrão dos tempos de Volta de uma Sessão.
 - **Gráfico_Radar**: Visualização em formato de teia com cinco dimensões: Performance, Consistência, Mental, Físico e Setup.
-- **Sistema**: A plataforma MXPilot Pro como um todo.
-- **App**: A aplicação mobile do MXPilot Pro.
+- **Sistema**: A plataforma MenteMX Pro como um todo.
+- **App**: A aplicação mobile do MenteMX Pro.
 - **Servidor**: Infraestrutura de backend Node.js responsável pela persistência e sincronização dos dados.
 - **Banco_Local**: Armazenamento de dados no dispositivo do Piloto, disponível sem conexão à internet.
 
@@ -199,5 +199,5 @@ O MVP cobre três módulos principais: **Analytics**, **Setup Técnico** e **Eve
 2. THE Sistema SHALL incluir no relatório: MX_Score atual, Gráfico_Radar, histórico de Sessões do período selecionado, melhor tempo registrado e evolução do índice de Consistência.
 3. THE App SHALL permitir que o Piloto selecione o período do relatório (últimos 7 dias, 30 dias, 90 dias ou intervalo personalizado).
 4. WHEN o relatório é gerado com sucesso, THE App SHALL disponibilizá-lo para compartilhamento via aplicativos nativos do dispositivo (WhatsApp, e-mail, etc.), sendo que a falha no compartilhamento não invalida o relatório gerado.
-5. THE Sistema SHALL incluir no relatório o logotipo do MXPilot Pro e a data de geração.
+5. THE Sistema SHALL incluir no relatório o logotipo do MenteMX Pro e a data de geração.
 6. IF o período selecionado não contiver nenhuma Sessão registrada, THEN THE App SHALL informar ao Piloto que não há dados suficientes para gerar o relatório.

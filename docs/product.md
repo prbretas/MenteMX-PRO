@@ -1,8 +1,8 @@
 
-# 🏁 MXPilot Pro - Product.md
+# 🏁 MenteMX Pro - Product.md
 
 ## 1. Visão do Produto
-O **MXPilot Pro** é uma plataforma SaaS (Software as a Service) de inteligência esportiva desenhada exclusivamente para o ecossistema do Motocross. O objetivo é transformar a percepção subjetiva do piloto em dados analíticos, permitindo uma evolução técnica baseada em métricas reais de performance, consistência e setup.
+O **MenteMX Pro** é o app do programa **Mente MX** — uma plataforma de inteligência esportiva e programa mental desenhada exclusivamente para pilotos e atletas do mundo offroad. O objetivo é transformar a percepção subjetiva do piloto em dados analíticos, permitindo uma evolução técnica e mental baseada em métricas reais de performance, consistência e setup.
 
 **Slogan:** *Dados criam campeões.*
 
@@ -60,13 +60,14 @@ Para garantir agilidade e performance em ambiente de pista:
 ---
 
 ## 6. Diferenciais Estratégicos
-- **Foco em Nicho:** Diferente de apps de GPS genéricos, o MXPilot Pro entende a linguagem do Motocross (cliques de suspensão, cansaço de braço, leitura de terreno).
+- **Foco em Nicho:** Diferente de apps de GPS genéricos, o MenteMX Pro entende a linguagem do offroad (cliques de suspensão, cansaço de braço, leitura de terreno).
 - **Design "Modo Luva":** Interface com botões grandes e comandos simplificados para uso rápido entre as baterias.
+- **Programa Mental:** Integração de dimensões Mental e Físico no acompanhamento do piloto, indo além da performance pura.
 
 ---
 
 ## 7. Manifesto de Negócio
-Não estamos a construir apenas um app de anotações. Estamos a construir o padrão nacional de análise para o off-road brasileiro. O MXPilot Pro é a mente estratégica que acompanha o piloto do portão de largada até o pódio.
+Não estamos a construir apenas um app de anotações. Estamos a construir o padrão nacional de análise para o off-road brasileiro. O MenteMX Pro é a mente estratégica que acompanha o piloto do portão de largada até o pódio.
 
 ---
 

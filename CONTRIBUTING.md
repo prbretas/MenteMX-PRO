@@ -1,4 +1,4 @@
-# Guia de Contribuição — MXPilot Pro
+# Guia de Contribuição — MenteMX Pro
 
 ---
 
@@ -130,7 +130,7 @@ bash scripts/create_issues.sh # Cria Issues em lote a partir de um arquivo
 
 ## Spec do projeto
 
-Antes de implementar qualquer funcionalidade, leia o spec em `.kiro/specs/mxpilot-pro/`:
+Antes de implementar qualquer funcionalidade, leia o spec em `.kiro/specs/mentemx-pro/`:
 
 - `requirements.md` — O que o sistema deve fazer
 - `design.md` — Como o sistema foi projetado
