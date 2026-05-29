@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import authRoutes from './auth/auth.routes.js';
 import bikesRoutes from './bikes/bikes.routes.js';
+import sessionsRoutes from './sessions/sessions.routes.js';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/auth', authRoutes);
 app.use('/', authRoutes); // /pilots/:id routes
 app.use('/', bikesRoutes); // /pilots/:id/bikes routes
+app.use('/', sessionsRoutes); // /pilots/:id/sessions + /sessions/:id/laps routes
 
 // Health check
 app.get('/api/health', (_req, res) => {
