@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import authRoutes from './auth/auth.routes.js';
 
 dotenv.config();
 
@@ -12,6 +13,10 @@ const PORT = process.env.PORT || 3000;
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+// Routes
+app.use('/auth', authRoutes);
+app.use('/', authRoutes); // /pilots/:id routes
 
 // Health check
 app.get('/api/health', (_req, res) => {
