@@ -1,4 +1,4 @@
-# Ata de Reunião — MXPilot Pro
+# Ata de Reunião — MenteMX Pro
 
 ---
 

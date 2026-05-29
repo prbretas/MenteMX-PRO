@@ -189,7 +189,7 @@ jobs:
             - [ ] Branch criada a partir de \`main\` com o nome correto (ex: \`feat/nome-da-feature\`)
             - [ ] Issue atribuída ao desenvolvedor responsável (assignee)
             - [ ] Ambiente de desenvolvimento configurado e funcionando
-            - [ ] Spec lido: \`.kiro/specs/mxpilot-pro/requirements.md\` e \`design.md\`
+            - [ ] Spec lido: \`.kiro/specs/mentemx-pro/requirements.md\` e \`design.md\`
 
             ### 🚀 Como iniciar
             \`\`\`bash

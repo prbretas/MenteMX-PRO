@@ -1,12 +1,12 @@
-# 🏁 MXPilot Pro
+# 🏁 MenteMX Pro
 
-> Plataforma SaaS de inteligência esportiva para Motocross. Dados criam campeões.
+> Plataforma de inteligência esportiva e programa mental para pilotos e atletas do mundo offroad. Dados criam campeões.
 
 ---
 
 ## Sobre
 
-O MXPilot Pro transforma a percepção subjetiva do piloto em dados analíticos estruturados, permitindo evolução técnica baseada em métricas reais de performance, consistência e setup de moto.
+O **MenteMX Pro** é o app do Mente MX — um programa mental para pilotos e atletas de mundo offroad. A plataforma transforma a percepção subjetiva do piloto em dados analíticos estruturados, permitindo evolução técnica e mental baseada em métricas reais de performance, consistência e setup de moto.
 
 O sistema opera em modelo **Local-First** — dados registrados offline, sincronizados quando há sinal. A interface segue o padrão **Modo Luva** — botões grandes, alto contraste e comandos simplificados para uso rápido entre baterias.
 
@@ -51,7 +51,7 @@ MXPilotPRO/
 │   └── backlog.md       # Backlog de épicos e stories
 ├── .kiro/
 │   └── specs/
-│       └── mxpilot-pro/ # Spec completo: requirements, design e tasks
+│       └── mentemx-pro/ # Spec completo: requirements, design e tasks
 └── scripts/             # Scripts de automação de issues e PRs
 ```
 
@@ -99,11 +99,11 @@ main  ←── Pull Request ←── feat/nome-da-feature
 
 ## Spec
 
-O spec completo do projeto está em `.kiro/specs/mxpilot-pro/`:
+O spec completo do projeto está em `.kiro/specs/mentemx-pro/`:
 
-- [`requirements.md`](.kiro/specs/mxpilot-pro/requirements.md) — 11 requisitos com user stories e critérios de aceitação
-- [`design.md`](.kiro/specs/mxpilot-pro/design.md) — Arquitetura, modelos de dados, algoritmos e 21 propriedades de correção
-- [`tasks.md`](.kiro/specs/mxpilot-pro/tasks.md) — Plano de implementação em 3 fases com 47 tarefas
+- [`requirements.md`](.kiro/specs/mentemx-pro/requirements.md) — 11 requisitos com user stories e critérios de aceitação
+- [`design.md`](.kiro/specs/mentemx-pro/design.md) — Arquitetura, modelos de dados, algoritmos e 21 propriedades de correção
+- [`tasks.md`](.kiro/specs/mentemx-pro/tasks.md) — Plano de implementação em 3 fases com 47 tarefas
 
 ---
 

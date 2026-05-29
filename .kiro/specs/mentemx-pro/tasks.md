@@ -1,8 +1,8 @@
-# Implementation Plan: MXPilot Pro
+# Implementation Plan: MenteMX Pro
 
 ## Overview
 
-Implementação incremental da plataforma MXPilot Pro seguindo o roadmap de produto em três fases: **Fundação** (estrutura, autenticação, registro de voltas), **Inteligência** (analytics, MX Score, Radar) e **Retenção** (gamificação, exportação PDF). A stack é React Native/Expo + SQLite/Drizzle ORM no mobile e Node.js/Express/PostgreSQL no backend. Todos os algoritmos de cálculo são cobertos por testes de propriedade com `fast-check`.
+Implementação incremental da plataforma MenteMX Pro seguindo o roadmap de produto em três fases: **Fundação** (estrutura, autenticação, registro de voltas), **Inteligência** (analytics, MX Score, Radar) e **Retenção** (gamificação, exportação PDF). A stack é React Native/Expo + SQLite/Drizzle ORM no mobile e Node.js/Express/PostgreSQL no backend. Todos os algoritmos de cálculo são cobertos por testes de propriedade com `fast-check`.
 
 ---
 
