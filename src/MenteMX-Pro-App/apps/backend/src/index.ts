@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import authRoutes from './auth/auth.routes.js';
+import bikesRoutes from './bikes/bikes.routes.js';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 // Routes
 app.use('/auth', authRoutes);
 app.use('/', authRoutes); // /pilots/:id routes
+app.use('/', bikesRoutes); // /pilots/:id/bikes routes
 
 // Health check
 app.get('/api/health', (_req, res) => {
