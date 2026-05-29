@@ -10,3 +10,4 @@
  */
 
 export * from './format.js';
+export * from './sync.js';
