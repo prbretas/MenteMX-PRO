@@ -8,6 +8,7 @@ import sessionsRoutes from './sessions/sessions.routes.js';
 import syncRoutes from './sync/sync.routes.js';
 import eventsRoutes from './events/events.routes.js';
 import setupsRoutes from './setups/setups.routes.js';
+import licensingRoutes from './licensing/licensing.routes.js';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use('/', sessionsRoutes); // /pilots/:id/sessions + /sessions/:id/laps route
 app.use('/sync', syncRoutes); // /sync/batch + /sync/status
 app.use('/', eventsRoutes); // /pilots/:id/events
 app.use('/', setupsRoutes); // /pilots/:id/setups
+app.use('/api/keys', licensingRoutes); // /api/keys/generate, activate, validate
 
 // Health check
 app.get('/api/health', (_req, res) => {
