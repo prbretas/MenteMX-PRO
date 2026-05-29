@@ -12,3 +12,4 @@
 export * from './format.js';
 export * from './sync.js';
 export * from './analytics/index.js';
+export * from './streak.js';
