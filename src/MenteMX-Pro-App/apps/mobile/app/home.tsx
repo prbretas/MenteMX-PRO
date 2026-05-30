@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { colors, spacing, fonts } from '../src/constants/theme';
 import { Button } from '../src/components/Button';
@@ -24,7 +25,7 @@ export default function HomeScreen() {
       </View>
 
       <View style={styles.actions}>
-        <Button title="Iniciar Sessão" onPress={() => {}} />
+        <Button title="Iniciar Sessão" onPress={() => router.push('/session')} />
         <Button title="Meus Setups" onPress={() => {}} variant="secondary" />
       </View>
     </View>
