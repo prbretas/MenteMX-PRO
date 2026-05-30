@@ -1,31 +1,12 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { Redirect } from 'expo-router';
 
-export default function HomeScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>🏁 MenteMX Pro</Text>
-      <Text style={styles.subtitle}>Dados criam campeões.</Text>
-      <StatusBar style="light" />
-    </View>
-  );
+/**
+ * Tela raiz — redireciona para login.
+ * Quando implementar persistência de token, verificar se já está logado
+ * e redirecionar para /home.
+ */
+export default function Index() {
+  // TODO: verificar token no AsyncStorage
+  // Se logado: return <Redirect href="/home" />;
+  return <Redirect href="/login" />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#1a1a2e',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginBottom: 8,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#a0a0a0',
-  },
-});
