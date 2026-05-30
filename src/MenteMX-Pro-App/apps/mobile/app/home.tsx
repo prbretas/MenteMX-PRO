@@ -26,7 +26,7 @@ export default function HomeScreen() {
 
       <View style={styles.actions}>
         <Button title="Iniciar Sessão" onPress={() => router.push('/session')} />
-        <Button title="Meus Setups" onPress={() => {}} variant="secondary" />
+        <Button title="Analytics" onPress={() => router.push('/analytics')} variant="secondary" />
       </View>
     </View>
   );
